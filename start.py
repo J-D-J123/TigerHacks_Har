@@ -6,8 +6,8 @@ from PIL import Image, ImageTk
 
 def makeMenu():
 
-    WIDTH   = 300
-    HEIGHT  = 200
+    WIDTH   = 500 # 300
+    HEIGHT  = 400 # 200
 
     print("making menu")
 
@@ -32,6 +32,7 @@ def makeMenu():
     root.grid_rowconfigure(0, weight=1)
     root.grid_columnconfigure(0,weight=1)
 
+    root.resizable(False, False)
     root.mainloop()
 
 def resizeImage(image, width, height):

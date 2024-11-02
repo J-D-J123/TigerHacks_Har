@@ -6,15 +6,16 @@ from PIL import Image, ImageTk
 
 def makeMenu():
 
+    # change size to your likeing 
     WIDTH   = 500 # 300
     HEIGHT  = 400 # 200
 
-    print("making menu")
+    # print("making menu")
 
     # set up the window 
     root = tk.Tk()
     root.geometry(f"{WIDTH}x{HEIGHT}")
-    # root.configure(bg="black")
+    #root.resizable(False, False)
 
     # load bg image
     orginalImg   = Image.open("assets/pictures/menuBg.png")
@@ -32,7 +33,6 @@ def makeMenu():
     root.grid_rowconfigure(0, weight=1)
     root.grid_columnconfigure(0,weight=1)
 
-    root.resizable(False, False)
     root.mainloop()
 
 def resizeImage(image, width, height):

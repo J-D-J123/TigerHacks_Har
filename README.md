@@ -3,7 +3,7 @@
 --------------------------
 # TO PLAY
 - Move truman the tiger with W, A, S, D
-- Gather corn and sell in the town 
+- Gather corn and sell in the town 🌽
 
 # FUTURE UPDATES
 - upgrade station

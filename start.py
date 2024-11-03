@@ -231,7 +231,7 @@ def main():
 
     # Variables for the animation
     animation_start_time = None
-    animation_duration = 100
+    animation_duration = 200
     is_animating = False
 
     # Initial drawing

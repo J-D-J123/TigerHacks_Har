@@ -165,8 +165,6 @@ def draw_game():
         to_town_text = font.render("To Town", True, WHITE)
         screen.blit(to_town_text, (grid_x + (grid_size - to_town_text.get_width()) // 2, grid_y + 5))
 
-        # TODO: 
-
         for crop in crops:
             pos_x, pos_y = crop["position"]
             x, y = grid_x + pos_x * cell_size, grid_y + pos_y * cell_size

@@ -1,5 +1,5 @@
 # TigerHacks_Har
-- Harvester Farming Simulator 
+- Truman's Farm Harvester 🐯
 --------------------------
 # TO PLAY
 - Move truman the tiger with W, A, S, D

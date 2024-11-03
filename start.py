@@ -1,4 +1,3 @@
-
 import pygame
 import random
 import sys
@@ -12,6 +11,7 @@ background_img = pygame.image.load("assets/pictures/menuBg.png")
 # images for "house"
 topbackground_img   = pygame.image.load("assets/pictures/topbg.jpg")
 sellbuilding_img    = pygame.image.load("assets/pictures/sellstation.png")
+storebuilding_img   = pygame.image.load("assets/pictures/jessieAuditorium.png")
 
 # Set initial window size and enable resizing
 MIN_WIDTH, MIN_HEIGHT = 700, 600  
@@ -68,6 +68,24 @@ current_grid = "main"
 growth_timer          = 0
 growth_interval       = 5000 
 
+# Store items
+# cornPrice = 50 
+
+# store_items = [
+#     {"name": "Corn Prices", "price": cornPrice},
+# ]
+
+
+# Store Button setup
+# store_buttons = []
+# button_gap = 10 
+# button_width = 200  
+# button_height = 50  
+
+# # Store variables
+# show_store      = False
+# close_button    = pygame.Rect(WIDTH - 80, 20, 50, 50)  
+
 # Load crop growth stages
 crop_stages = [
     pygame.image.load("assets/pictures/firstcorn.png"),
@@ -75,9 +93,6 @@ crop_stages = [
     pygame.image.load("assets/pictures/thirdcorn.png"),
 ]
 crop_stages = [pygame.transform.scale(stage, (cell_size, cell_size)) for stage in crop_stages]
-
-# Middle cell coordinates in the house grid (for selling crops)
-# sell_cell_position = (0.16, 0.16)
 
 def initialize_crops():
     positions = set()
@@ -127,6 +142,8 @@ def draw_menu():
                             quit_button.y + (quit_button.height - quit_text.get_height())       // 2))
 
 def draw_game():
+    global storeX, storeY
+
     scaled_topbackground_img = pygame.transform.scale(topbackground_img, (grid_size, grid_size))
 
     grid_x = (WIDTH - grid_size) // 2
@@ -162,13 +179,8 @@ def draw_game():
         # Draw the scaled top background image
         screen.blit(scaled_topbackground_img, (grid_x, grid_y))
 
-        # Draw the special sell cell 
-        # sell_x, sell_y = sell_cell_position
-        # pygame.draw.rect(screen, SELL_CELL_COLOR, (grid_x + sell_x * cell_size, grid_y + sell_y * cell_size, cell_size, cell_size))
-
-        # Draw sell station
-        # Scale the sell building image
-        scaled_sellbuilding_img = pygame.transform.scale(sellbuilding_img, (int(cell_size * 1.5), int(cell_size * 1)))  # Change these dimensions as needed
+        # Scale the building
+        scaled_sellbuilding_img = pygame.transform.scale(sellbuilding_img, (int(cell_size * 1.5), int(cell_size * 1)))  
 
         # Draw sell station in the specified cell
         image_cell_x = 1
@@ -183,26 +195,36 @@ def draw_game():
         # Sell text under sell station 
         sell_text   = font.render("Sell", True, WHITE)
         screen.blit(sell_text, (image_x + 45, image_y + 20))
-        
+
+        # Buy station 
+        storecell_x = 3
+        storecell_y = 0.9
+
+        scaled_storestation_img = pygame.transform.scale(storebuilding_img, (int(cell_size * 1.5), int(cell_size * 1)))
+
+        storeX = grid_x + storecell_x * cell_size + (cell_size - scaled_storestation_img.get_width()) // 2
+        storeY = grid_y + storecell_y * cell_size + (cell_size - scaled_sellbuilding_img.get_height()) // 2  
+
+        screen.blit(scaled_storestation_img, (storeX, storeY))
+
+        # buy_text = font.render("Buy", True, WHITE)
+        # screen.blit(buy_text, (storeX + 50, storeY + 20))
 
         # Draw "To Farm" text in the bottom row, centered
         to_farm_text = font.render("To Farm", True, WHITE)
         screen.blit(to_farm_text, (grid_x + (grid_size - to_farm_text.get_width()) // 2, grid_y + grid_size - to_farm_text.get_height()))
 
-
-
     # Draw character image at the current position
     screen.blit(character_img, (grid_x + char_x, grid_y + char_y))
 
     # Display "Corn = [amount]" on the top-left
-    corn_text = font.render(f"Corn: {corn_count}", True, BLACK)
+    corn_text = font.render(f"Crop: {corn_count}", True, BLACK)
     screen.blit(corn_text, (10, 10))
 
     # Display "$[amount]" on the top-right
     default_font = pygame.font.Font(None, 46)
     money_text = default_font.render(f"$ {money_amount}", True, BLACK)
     screen.blit(money_text, (WIDTH - money_text.get_width() - 10, 10))
-
 
 def main():
     global game_running, char_x, char_y, corn_count, money_amount, current_grid
@@ -226,6 +248,8 @@ def main():
 
     # Main game loop
     while True:
+        # global show_store
+
         grid_x = (WIDTH - grid_size) // 2  # Define grid_x for use in the event loop
         grid_y = (HEIGHT - grid_size) // 2  # Define grid_y for use in the event loop
 
@@ -238,15 +262,15 @@ def main():
                     if start_button.collidepoint(event.pos):
                         game_running = True
                         # Initialize crops when starting the game
-                        crops.clear()  # Clear existing crops to avoid duplicates
-                        crops.extend(initialize_crops())  # Initialize crops
+                        crops.clear()  
+                        crops.extend(initialize_crops())  
                         global growth_timer
-                        growth_timer = pygame.time.get_ticks()  # Reset growth timer
+                        growth_timer = pygame.time.get_ticks()  
                     elif quit_button.collidepoint(event.pos):
                         pygame.quit()
                         sys.exit()
             elif event.type == pygame.KEYDOWN and game_running:
-                # Set pressed state for movement keys
+                
                 if event.key == pygame.K_w:
                     pressed_keys["w"] = True
                 elif event.key == pygame.K_a:
@@ -256,7 +280,7 @@ def main():
                 elif event.key == pygame.K_d:
                     pressed_keys["d"] = True
             elif event.type == pygame.KEYUP and game_running:
-                # Reset pressed state for movement keys
+                
                 if event.key == pygame.K_w:
                     pressed_keys["w"] = False
                 elif event.key == pygame.K_a:
@@ -305,6 +329,17 @@ def main():
                 if corn_count > 0:
                     money_amount += corn_count
                     corn_count = 0
+            
+            # print(f"x={char_x}, y={char_y}")
+            # if (
+            #     current_grid == "house"
+            #     and char_x >= 275 
+            #     and char_y >= 80  
+            # ):
+                # show_store = True
+                # print("selling")
+            # else:
+            #     show_store = False
 
             # Harvesting logic in the main grid
             if current_grid == "main":
@@ -327,10 +362,10 @@ def main():
 
         # Check crop growth based on timer
         if game_running:
-            char_xtest = char_x / cell_size
-            char_ytest = char_y / cell_size
+            # char_xtest = char_x / cell_size
+            # char_ytest = char_y / cell_size
 
-            print(f"x={char_xtest} y={char_ytest}")
+            # print(f"x={char_xtest} y={char_ytest}")
 
             current_time = pygame.time.get_ticks()
             if current_time - growth_timer >= growth_interval:
@@ -343,6 +378,7 @@ def main():
         # Drawing operations
         if game_running:
             draw_game()
+
         else:
             draw_menu()
 

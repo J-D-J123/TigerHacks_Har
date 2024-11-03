@@ -1,23 +1,11 @@
 # TigerHacks_Har
 - Harvester Farming Simulator 
 --------------------------
-TODO:
-- adjust window size
+# TO PLAY
+- Move truman the tiger with W, A, S, D
+- Gather corn and sell in the town 
 
-# TIGER
-- W, A, S, D + arrow keys to move
-- switch animation
-
-# CROPS
-- pick up
-- grow 
-
-# sell box
-- detects player
-
-# Upgrade Box (hire player)
-- pay them once a week
-
-# counters 
-- left top corner money counter
-- crop counter top left 
+# FUTURE UPDATES
+- upgrade station
+- more map areas + more crops
+- NPC workers 

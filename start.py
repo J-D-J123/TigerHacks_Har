@@ -21,6 +21,7 @@ pygame.display.set_caption("Truman's Farm Harvester")
 
 # Colors
 WHITE           = (255, 255, 255)
+RED             = (255, 0, 0)
 SAND            = (194, 178, 128)
 GREEN           = (0, 255, 0)
 GREY            = (200, 200, 200)
@@ -56,7 +57,7 @@ character_collect_img = pygame.image.load("assets/pictures/tiger_scythe_down.png
 character_collect_img = pygame.transform.scale(character_collect_img, (cell_size + 32, cell_size + 32))
 
 # Character position starts in the top-left grid location
-char_x, char_y        = 0, 0
+char_x, char_y        = 200, 200
 
 # counter variables
 corn_count            = 0
@@ -127,14 +128,14 @@ def draw_menu():
     screen.blit(title_text, (WIDTH // 2 - title_text.get_width() // 2, HEIGHT // 4))
 
     # Draw buttons
-    pygame.draw.rect(screen, GREY, start_button)
-    pygame.draw.rect(screen, GREY, quit_button)
+    pygame.draw.rect(screen, GREEN, start_button)
+    pygame.draw.rect(screen, RED, quit_button)
 
     start_text = font.render("Start", True, BLACK)
     quit_text = font.render("Quit", True, BLACK)
 
     # Start button
-    screen.blit(start_text, (start_button.x + (start_button.width - start_text.get_width())     // 2,
+    screen.blit(start_text, (start_button.x + (start_button.width  - start_text.get_width())     // 2,
                              start_button.y + (start_button.height - start_text.get_height())   // 2))
     
     # Exit button

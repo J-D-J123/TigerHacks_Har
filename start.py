@@ -127,6 +127,8 @@ def draw_menu():
     title_text = large_font.render("Truman's Farm Harvester", True, WHITE)
     screen.blit(title_text, (WIDTH // 2 - title_text.get_width() // 2, HEIGHT // 4))
 
+    move_text = font.render("use w, a, s, d to move", True, WHITE)
+    screen.blit(move_text, (WIDTH // 2 - move_text.get_width() // 2, (HEIGHT // 4) + 300))
     # Draw buttons
     pygame.draw.rect(screen, GREEN, start_button)
     pygame.draw.rect(screen, RED, quit_button)

@@ -8,7 +8,10 @@ pygame.init()
 
 # Load background image
 background_img = pygame.image.load("assets/pictures/menuBg.png") 
+
+# images for "house"
 topbackground_img   = pygame.image.load("assets/pictures/topbg.jpg")
+sellbuilding_img    = pygame.image.load("assets/pictures/sellstation.png")
 
 # Set initial window size and enable resizing
 MIN_WIDTH, MIN_HEIGHT = 700, 600  
@@ -29,7 +32,7 @@ HOUSE_COLOR     = (150, 111, 51)
 
 # Load custom font
 font_path       = "assets/fonts/docktrin.ttf"
-font = pygame.font.Font(font_path, 36)
+font            = pygame.font.Font(font_path, 36)
 large_font      = pygame.font.Font(font_path, 48)
 
 # Button setup
@@ -53,7 +56,7 @@ character_collect_img = pygame.image.load("assets/pictures/tiger_scythe_down.png
 character_collect_img = pygame.transform.scale(character_collect_img, (cell_size + 32, cell_size + 32))
 
 # Character position starts in the top-left grid location
-char_x, char_y = 0, 0
+char_x, char_y        = 0, 0
 
 # counter variables
 corn_count            = 0
@@ -63,7 +66,7 @@ money_amount          = 0
 current_grid = "main"
 
 growth_timer          = 0
-growth_interval       = 5000
+growth_interval       = 5000 
 
 # Load crop growth stages
 crop_stages = [
@@ -74,7 +77,7 @@ crop_stages = [
 crop_stages = [pygame.transform.scale(stage, (cell_size, cell_size)) for stage in crop_stages]
 
 # Middle cell coordinates in the house grid (for selling crops)
-sell_cell_position = (0, 0)
+# sell_cell_position = (0.16, 0.16)
 
 def initialize_crops():
     positions = set()
@@ -156,25 +159,48 @@ def draw_game():
         # Draw the house grid
         pygame.draw.rect(screen, HOUSE_COLOR, (grid_x, grid_y, grid_size, grid_size))
 
-        # Draw "To Farm" text in the bottom row, centered
-        to_farm_text = font.render("To Farm", True, BLACK)
-        screen.blit(to_farm_text, (grid_x + (grid_size - to_farm_text.get_width()) // 2, grid_y + grid_size - cell_size + 70))
+        # Draw the scaled top background image
         screen.blit(scaled_topbackground_img, (grid_x, grid_y))
 
-        # Draw the special sell cell in the middle
-        sell_x, sell_y = sell_cell_position
-        pygame.draw.rect(screen, SELL_CELL_COLOR, (grid_x + sell_x * cell_size, grid_y + sell_y * cell_size, cell_size, cell_size))
+        # Draw the special sell cell 
+        # sell_x, sell_y = sell_cell_position
+        # pygame.draw.rect(screen, SELL_CELL_COLOR, (grid_x + sell_x * cell_size, grid_y + sell_y * cell_size, cell_size, cell_size))
+
+        # Draw sell station
+        # Scale the sell building image
+        scaled_sellbuilding_img = pygame.transform.scale(sellbuilding_img, (int(cell_size * 1.5), int(cell_size * 1)))  # Change these dimensions as needed
+
+        # Draw sell station in the specified cell
+        image_cell_x = 1
+        image_cell_y = 1
+
+        # Calculate the position on the screen based on the cell size
+        image_x = grid_x + image_cell_x * cell_size + (cell_size - scaled_sellbuilding_img.get_width()) // 2 
+        image_y = grid_y + image_cell_y * cell_size + (cell_size - scaled_sellbuilding_img.get_height()) // 2  
+
+        screen.blit(scaled_sellbuilding_img, (image_x, image_y))
+
+        # Sell text under sell station 
+        sell_text   = font.render("Sell", True, WHITE)
+        screen.blit(sell_text, (image_x + 45, image_y + 20))
+        
+
+        # Draw "To Farm" text in the bottom row, centered
+        to_farm_text = font.render("To Farm", True, WHITE)
+        screen.blit(to_farm_text, (grid_x + (grid_size - to_farm_text.get_width()) // 2, grid_y + grid_size - to_farm_text.get_height()))
+
+
 
     # Draw character image at the current position
     screen.blit(character_img, (grid_x + char_x, grid_y + char_y))
 
     # Display "Corn = [amount]" on the top-left
-    corn_text = font.render(f"Corn: {corn_count}", True, WHITE)
+    corn_text = font.render(f"Corn: {corn_count}", True, BLACK)
     screen.blit(corn_text, (10, 10))
 
     # Display "$[amount]" on the top-right
     default_font = pygame.font.Font(None, 46)
-    money_text = default_font.render(f"$ {money_amount}", True, GREEN)
+    money_text = default_font.render(f"$ {money_amount}", True, BLACK)
     screen.blit(money_text, (WIDTH - money_text.get_width() - 10, 10))
 
 
@@ -184,7 +210,7 @@ def main():
 
     # Variables for the animation
     animation_start_time = None
-    animation_duration = 500
+    animation_duration = 100
     is_animating = False
 
     # Initial drawing
@@ -195,7 +221,7 @@ def main():
         "w": False,
         "a": False,
         "s": False,
-        "d": False
+        "d": False,
     }
 
     # Main game loop
@@ -241,39 +267,44 @@ def main():
                     pressed_keys["d"] = False
 
         # Move character based on pressed keys
-        # Move character based on pressed keys
         if game_running:
-            if pressed_keys["w"] and char_y == 0 and current_grid == "main":  # Move to house grid
-                char_y = cell_size * 4  # Set character position to bottom of the house grid
-                current_grid = "house"  # Change to house grid
-            elif pressed_keys["s"] and char_y == cell_size * 4 and current_grid == "house":  # Move to main grid
-                char_y = 0  # Set character position to top of the main grid
-                current_grid = "main"  # Change to main grid
+            if pressed_keys["w"] and char_y == 0 and current_grid == "main":  
+                char_y = cell_size * 4  
+                current_grid = "house"  
+            elif pressed_keys["s"] and char_y == cell_size * 4 and current_grid == "house":  
+                char_y = 0  
+                current_grid = "main"  
 
-            # Move character left and right, allowing edge movement
-            if pressed_keys["a"] and char_x > 0:  # Move left
+            # Move character left and right
+            if pressed_keys["a"] and char_x > 0:  
                 char_x -= char_speed
-            elif pressed_keys["d"] and char_x < grid_size - cell_size:  # Move right
+            elif pressed_keys["d"] and char_x < grid_size - cell_size:  
                 char_x += char_speed
 
             # Allow vertical movement in main and house grids
             if current_grid == "main":
-                if pressed_keys["w"] and char_y > 0:  # Move up within the main grid
+                if pressed_keys["w"] and char_y > 0:  
                     char_y -= char_speed
-                elif pressed_keys["s"] and char_y < grid_size - cell_size:  # Move down within the main grid
+                elif pressed_keys["s"] and char_y < grid_size - cell_size:  
                     char_y += char_speed
             elif current_grid == "house":
-                if pressed_keys["w"] and char_y > 0:  # Move up within the house grid
+                if pressed_keys["w"] and char_y > 0: 
                     char_y -= char_speed
-                elif pressed_keys["s"] and char_y < grid_size - cell_size:  # Move down within the house grid
+                elif pressed_keys["s"] and char_y < grid_size - cell_size: 
                     char_y += char_speed
 
             # Check if character is in the sell cell in the house grid
-            if current_grid == "house" and (char_x // cell_size, char_y // cell_size) == sell_cell_position:
+            if (
+                current_grid == "house" 
+                and char_x < 1.25 * cell_size 
+                and char_y < 0.8 * cell_size and char_x != 0.10
+
+            ):
+                # print("selling")
                 # Sell corn when in sell cell
                 if corn_count > 0:
                     money_amount += corn_count
-                    corn_count = 0  # Reset corn count after selling
+                    corn_count = 0
 
             # Harvesting logic in the main grid
             if current_grid == "main":
@@ -281,26 +312,33 @@ def main():
                     pos_x, pos_y = crop["position"]
                     crop_rect = pygame.Rect(grid_x + pos_x * cell_size, grid_y + pos_y * cell_size, cell_size,
                                             cell_size)
+                    
                     # Check if the character is colliding with a crop
                     if crop_rect.collidepoint(grid_x + char_x + cell_size // 2, grid_y + char_y + cell_size // 2):
-                        # Check if crop is at final stage before harvesting
+                        
                         if crop["stage"] == len(crop_stages) - 1:
-                            corn_count += 1  # Increment corn count
-                            crop["stage"] = 0  # Reset crop stage
-                            animation_start_time = pygame.time.get_ticks()  # Start the animation
-                            is_animating = True  # Set the animation flag
-                        else:
-                            print("Crop is not ready for harvesting.")  # Print message if not ready
+                            corn_count += 1 
+                            crop["stage"] = 0  
+                            animation_start_time = pygame.time.get_ticks()  
+                            is_animating = True  
+                        # else:
+                        #     # testing only 
+                        #     print("Crop is not ready for harvesting.")  
 
         # Check crop growth based on timer
         if game_running:
+            char_xtest = char_x / cell_size
+            char_ytest = char_y / cell_size
+
+            print(f"x={char_xtest} y={char_ytest}")
+
             current_time = pygame.time.get_ticks()
             if current_time - growth_timer >= growth_interval:
                 for crop in crops:
-                    # Increment crop growth stage, reset if at final stage
+                    
                     if crop["stage"] < len(crop_stages) - 1:
                         crop["stage"] += 1
-                growth_timer = current_time  # Reset growth timer
+                growth_timer = current_time  
 
         # Drawing operations
         if game_running:
@@ -316,8 +354,10 @@ def main():
             if animation_start_time is not None and pygame.time.get_ticks() - animation_start_time >= animation_duration:
                 is_animating = False  # Reset animation flag after duration
 
-        pygame.display.flip()  # Update the full display Surface to the screen
-        pygame.time.Clock().tick(60)  # Maintain 60 frames per second
+        pygame.display.flip()  
+
+        # 60 FPS
+        pygame.time.Clock().tick(60)  
 
 
 if __name__ == "__main__":

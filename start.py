@@ -1,3 +1,4 @@
+
 import pygame
 import random
 import sys
@@ -7,6 +8,7 @@ pygame.init()
 
 # Load background image
 background_img = pygame.image.load("assets/pictures/menuBg.png") 
+topbackground_img   = pygame.image.load("assets/pictures/topbg.jpg")
 
 # Set initial window size and enable resizing
 MIN_WIDTH, MIN_HEIGHT = 700, 600  
@@ -122,6 +124,11 @@ def draw_menu():
                             quit_button.y + (quit_button.height - quit_text.get_height())       // 2))
 
 def draw_game():
+    scaled_topbackground_img = pygame.transform.scale(topbackground_img, (grid_size, grid_size))
+
+    grid_x = (WIDTH - grid_size) // 2
+    grid_y = (HEIGHT - grid_size) // 2
+
     # Draw background
     screen.blit(background_img, (0, 0))
 
@@ -135,7 +142,7 @@ def draw_game():
         pygame.draw.rect(screen, SAND, (grid_x, grid_y, grid_size, grid_size))
 
         # Draw "To Town" text in the top row, centered
-        to_town_text = font.render("To Town", True, BLACK)
+        to_town_text = font.render("To Town", True, WHITE)
         screen.blit(to_town_text, (grid_x + (grid_size - to_town_text.get_width()) // 2, grid_y + 5))
 
         # TODO: 
@@ -152,6 +159,7 @@ def draw_game():
         # Draw "To Farm" text in the bottom row, centered
         to_farm_text = font.render("To Farm", True, BLACK)
         screen.blit(to_farm_text, (grid_x + (grid_size - to_farm_text.get_width()) // 2, grid_y + grid_size - cell_size + 70))
+        screen.blit(scaled_topbackground_img, (grid_x, grid_y))
 
         # Draw the special sell cell in the middle
         sell_x, sell_y = sell_cell_position
